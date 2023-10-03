@@ -1,3 +1,6 @@
+# Streaming-Platform
+This repository contains source code for modern streaming platform built with Next.js and React, backed by MongoDB for content storage and Prisma for database management and database abstraction layer. This platform offers a seamless streaming experience, enabling users to discover, watch, and interact with a wide range of multimedia content.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
