@@ -56,3 +56,13 @@ model Session {
   // Mapping
   user User @relation(fields: [userId], references: [id], onDelete:Cascade) //CASCADE in SQL is used to simultaneously delete or update an entry from both the child and parent table
 }
+
+// VerificationToken Model Schema
+model VerificationToken {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token String @unique
+  expires DateTime
+
+  @@unique([identifier,token])
+}
