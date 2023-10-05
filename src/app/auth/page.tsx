@@ -29,9 +29,9 @@ const Auth = () => {
                             <Input label="Email" onChange={(event: any) => setEmail(event.target.value)} id="email" type="email" value={email} />
                             <Input label="Password" onChange={(event: any) => setPassword(event.target.value)} id="email" type="email" value={password} />
                         </div>
-                        <button className="bg-red-600 text-white w-full mt-10 hover:bg-red-700 transition py-3 rounded-md font-semibold"> {variant === 'login' ? 'Login' : 'Sign Up'} </button>
+                        <button className="bg-red-600 text-white w-full mt-6 hover:bg-red-700 transition py-3 rounded-md font-semibold"> {variant === 'login' ? 'Login' : 'Sign Up'} </button>
                         <p className="text-neutral-500 mt-12">{variant === 'login' ? 'New to XStream?' : 'Already have an account?'}
-                            <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer">{variant === 'login' ? 'Create an account' : 'Login'}</span>
+                            <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer font-semibold">{variant === 'login' ? 'Create an account' : 'Login'}</span>
                         </p>
                     </div>
 
