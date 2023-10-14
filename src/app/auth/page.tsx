@@ -1,51 +1,85 @@
 "use client"
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Input from "../components/Input";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import Button from "../components/Button";
+import toast from "react-hot-toast";
 
+
+type Variant = 'LOGIN' | 'REGISTER';
 const Auth = () => {
+    const session = useSession();
     const router = useRouter();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [variant, setVariant] = useState('login');
+    const [variant, setVariant] = useState<Variant>('LOGIN');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (session?.status === 'authenticated') {
+            console.log("authenticated")
+            router.push("/users");
+        }
+    }, [session?.status, router])
 
     const toggleVariant = useCallback(() => {
-        setVariant((currentVariant) => currentVariant === 'login' ? 'register' : 'login');
-    }, []);
-
-    // Login Function
-    const login = useCallback(async () => {
-        try {
-            await signIn('credentials', {
-                email,
-                password,
-                redirect: false,
-                callbackUrl: '/'
-            });
-            router.push('/');
+        if (variant === 'LOGIN') {
+            setVariant('REGISTER');
+        } else {
+            setVariant('LOGIN');
         }
-        catch (error) {
-            console.log(error);
-        };
-    }, [email, password, router]);
+    }, [variant]);
 
-    // Register function
-    const register = useCallback(async () => {
-        try {
-            await axios.post('/api/register', JSON.stringify({
-                email,
-                name,
-                password
-            }));
-            login();
-        } catch (error) {
-            console.log(error);
+
+    const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
+        defaultValues: {
+            name: '',
+            email: '',
+            password: ''
         }
-    }, [email, name, password, login]);
+    });
 
+    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+        setIsLoading(true);
+
+        if (variant === 'REGISTER') {
+            axios.post('/api/register', data)
+                .then(() => signIn('credentials', {
+                    ...data,
+                    redirect: false,
+                }))
+                .then((callback) => {
+                    if (callback?.error) {
+                        toast.error('Invalid credentials!');
+                    }
+
+                    if (callback?.ok) {
+                        router.push('/users')
+                    }
+                })
+                .catch(() => toast.error('Something went wrong!'))
+                .finally(() => setIsLoading(false))
+        }
+
+        if (variant === 'LOGIN') {
+            signIn('credentials', {
+                ...data,
+                redirect: false
+            })
+                .then((callback) => {
+                    if (callback?.error) {
+                        toast.error("Invalid Credentials");
+                    }
+                    if (callback?.ok && !callback?.error) {
+                        toast.success("Logged in!");
+                        router.push("/users");
+                    }
+                })
+                .finally(() => setIsLoading(false));
+        }
+
+    }
     return (
         <div className="relative h-full w-full bg-[url('../../public/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
             <div className="bg-black w-full h-full lg:bg-opacity-40">
@@ -54,24 +88,26 @@ const Auth = () => {
                 </nav>
                 <div className="flex justify-center">
                     <div className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:max-w-md rounded-md w-full">
-                        <h2 className="text-white text-4xl mb-8 font-semibold">{variant === 'login' ? 'Sign in' : 'Create Account'}</h2>
-                        <div className="flex flex-col gap-4">
-                            {variant === 'register' && (
+                        <h2 className="text-white text-4xl mb-8 font-semibold">{variant === 'LOGIN' ? 'Sign in' : 'Create Account'}</h2>
+                        <form onSubmit={handleSubmit(onSubmit)} >
+                            <div className="flex flex-col gap-4">
+                                {variant === 'REGISTER' && (
 
-                                <Input label="Username" onChange={(event: any) => setName(event.target.value)} id="name" type="text" value={name} />
-                            )}
-                            <Input label="Email" onChange={(event: any) => setEmail(event.target.value)} id="email" type="email" value={email} />
-                            <Input label="Password" onChange={(event: any) => setPassword(event.target.value)} id="password" type="email" value={password} />
-                        </div>
-                        <button onClick={variant == 'login' ? login : register} className="bg-red-600 text-white w-full mt-6 hover:bg-red-700 transition py-3 rounded-md font-semibold"> {variant === 'login' ? 'Login' : 'Sign Up'} </button>
-                        <p className="text-neutral-500 mt-12">{variant === 'login' ? 'New to XStream?' : 'Already have an account?'}
-                            <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer font-semibold">{variant === 'login' ? 'Create an account' : 'Login'}</span>
+                                    <Input label="Username" id="name" type="text" register={register} errors={errors} disabled={isLoading} />
+                                )}
+                                <Input label="Email" register={register} id="email" type="email" errors={errors} disabled={isLoading} />
+                                <Input label="Password" id="password" type="password" register={register} errors={errors} disabled={isLoading} />
+                            </div>
+                            <Button disabled={isLoading} fullWidth type="submit"> {variant === 'LOGIN' ? "Sign in" : "Register"}</Button>
+                        </form>
+                        <p className="text-neutral-500 mt-12">{variant === 'LOGIN' ? 'New to XStream?' : 'Already have an account?'}
+                            <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer font-semibold">{variant === 'LOGIN' ? 'Create an account' : 'Login'}</span>
                         </p>
                     </div>
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 export default Auth;
