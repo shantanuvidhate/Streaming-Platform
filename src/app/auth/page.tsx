@@ -19,7 +19,7 @@ const Auth = () => {
     useEffect(() => {
         if (session?.status === 'authenticated') {
             console.log("authenticated")
-            router.push("/users");
+            // router.push("/users");
         }
     }, [session?.status, router])
 
@@ -55,7 +55,7 @@ const Auth = () => {
                     }
 
                     if (callback?.ok) {
-                        router.push('/users')
+                        router.push('/profiles')
                     }
                 })
                 .catch(() => toast.error('Something went wrong!'))
@@ -65,7 +65,7 @@ const Auth = () => {
         if (variant === 'LOGIN') {
             signIn('credentials', {
                 ...data,
-                redirect: false
+                redirect: false,
             })
                 .then((callback) => {
                     if (callback?.error) {
@@ -73,7 +73,7 @@ const Auth = () => {
                     }
                     if (callback?.ok && !callback?.error) {
                         toast.success("Logged in!");
-                        router.push("/users");
+                        router.push("/profiles");
                     }
                 })
                 .finally(() => setIsLoading(false));
