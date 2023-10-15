@@ -24,7 +24,8 @@ interface ButtonProps {
         type={type}
         disabled={disabled}
         className={clsx(`
-        bg-red-600 text-white w-full mt-6 hover:bg-red-700 transition py-3 rounded-md font-semibold`,
+        bg-red-600 text-white w-full mt-6 hover:bg-red-700 transition py-3 rounded-md font-semibold flex flex-row items-center justify-center`,
+        disabled && 'opacity-80 cursor-default hover:bg-red-600'
         )}
       >
         {children}
