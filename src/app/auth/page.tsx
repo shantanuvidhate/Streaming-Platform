@@ -84,7 +84,8 @@ const Auth = () => {
         <div className="relative h-full w-full bg-[url('../../public/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
             <div className="bg-black w-full h-full lg:bg-opacity-40">
                 <nav className="px-12 py-5">
-                    <img src="/images/logo.png" alt="LOGO" className="h-12" />
+                    {/* <img src="/images/logo.png" alt="LOGO" className="h-12" /> */}
+                <div className="text-4xl text-red-600 font-bold">T-Stream</div>
                 </nav>
                 <div className="flex justify-center">
                     <div className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:max-w-md rounded-md w-full">
@@ -115,7 +116,7 @@ const Auth = () => {
                                 </div>
                             </Button>
                         </form>
-                        <p className="text-neutral-500 mt-12">{variant === 'LOGIN' ? 'New to XStream?' : 'Already have an account?'}
+                        <p className="text-neutral-500 mt-12">{variant === 'LOGIN' ? 'New to T-Stream?' : 'Already have an account?'}
                             <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer font-semibold">{variant === 'LOGIN' ? 'Create an account' : 'Login'}</span>
                         </p>
                     </div>
