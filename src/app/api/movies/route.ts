@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 
 
-export async function GET(request: NextResponse, response: NextResponse) {
+export async function GET(request: NextRequest, response: NextResponse) {
     let success = true;
     try {
         const movies = await prismadb.movie.findMany();
