@@ -5,7 +5,7 @@ import NavBar from "../components/Navbar";
 
 const getMovieList = async () => {
     try {
-        const res = await fetch("http://localhost:3000/api/movies")
+        const res = await fetch("https://t-stream.vercel.app/api/movies")
         const data = await res.json();
         // console.log(data);
         return data;

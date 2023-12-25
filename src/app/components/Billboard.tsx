@@ -10,7 +10,7 @@ export default function Billboard() {
     }, [])
 
     const getRandomMovie = async () => {
-        let randomMovie = await fetch("http://localhost:3000/api/random")
+        let randomMovie = await fetch("https://t-stream.vercel.app/api/random")
         let randomMovieData = await randomMovie.json();
         setData(randomMovieData.data);
         // console.log(randomMovieData.data.videoUrl);
