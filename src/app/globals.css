@@ -5,7 +5,7 @@
 /* global body element css */
 
 body {
-  @apply bg-zinc-900 h-full overflow-hidden;
+  @apply bg-zinc-900 h-full overflow-x-auto;
 }
 
 #__next {
